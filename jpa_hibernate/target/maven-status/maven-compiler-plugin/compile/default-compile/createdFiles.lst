@@ -1,0 +1,5 @@
+models\PessoaModel.class
+entities\Produto.class
+entities\Pessoa.class
+demo\AdministrativoApp.class
+models\ProdutoModel.class
