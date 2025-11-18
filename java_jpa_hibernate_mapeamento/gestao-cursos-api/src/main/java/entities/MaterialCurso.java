@@ -3,30 +3,39 @@ package entities;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "materiais_curso")
 public class MaterialCurso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String urlMaterial;
+    private String url;
 
-    @OneToOne(mappedBy = "materialCurso")
+    // Um curso tem apenas um material, e o material pertence apenas a um curso
+    @OneToOne
+    @JoinColumn(name = "curso_id")
     private Curso curso;
 
     public MaterialCurso() {
     }
 
+    // Getters e setters
+
     public Long getId() {
         return id;
     }
 
-    public String getUrlMaterial() {
-        return urlMaterial;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setUrlMaterial(String urlMaterial) {
-        this.urlMaterial = urlMaterial;
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Curso getCurso() {

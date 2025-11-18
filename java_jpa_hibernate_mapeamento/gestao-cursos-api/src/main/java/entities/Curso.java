@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "cursos")
 public class Curso {
 
     @Id
@@ -13,27 +14,32 @@ public class Curso {
 
     private String nome;
 
-    @ManyToOne
+    private String sigla;
+
+    // Um curso tem apenas um professor (muitos cursos para um professor)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "professor_id")
     private Professor professor;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "material_id")
+    // Um curso tem apenas um material, e o material pertence apenas a um curso
+    @OneToOne(mappedBy = "curso", cascade = CascadeType.ALL)
     private MaterialCurso materialCurso;
 
-    @ManyToMany
-    @JoinTable(
-            name = "curso_aluno",
-            joinColumns = @JoinColumn(name = "curso_id"),
-            inverseJoinColumns = @JoinColumn(name = "aluno_id")
-    )
+    // Um curso pode ter um ou mais alunos
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL)
     private List<Aluno> alunos = new ArrayList<>();
 
     public Curso() {
     }
 
+    // Getters e setters
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -44,15 +50,20 @@ public class Curso {
         this.nome = nome;
     }
 
+    public String getSigla() {
+        return sigla;
+    }
+
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
+    }
+
     public Professor getProfessor() {
         return professor;
     }
 
     public void setProfessor(Professor professor) {
         this.professor = professor;
-        if (professor != null) {
-            professor.addCurso(this);
-        }
     }
 
     public MaterialCurso getMaterialCurso() {
@@ -61,17 +72,18 @@ public class Curso {
 
     public void setMaterialCurso(MaterialCurso materialCurso) {
         this.materialCurso = materialCurso;
-        if (materialCurso != null) {
-            materialCurso.setCurso(this);
-        }
     }
 
     public List<Aluno> getAlunos() {
         return alunos;
     }
 
+    public void setAlunos(List<Aluno> alunos) {
+        this.alunos = alunos;
+    }
+
     public void addAluno(Aluno aluno) {
-        this.alunos.add(aluno);
-        aluno.addCurso(this);
+        alunos.add(aluno);
+        aluno.setCurso(this);
     }
 }

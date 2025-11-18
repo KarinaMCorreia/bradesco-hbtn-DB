@@ -1,17 +1,23 @@
 package entities;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "alunos")
 public class Aluno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String nomeCompleto;
+
+    private String matricula;
+
+    private LocalDate nascimento;
 
     private String email;
 
@@ -21,22 +27,44 @@ public class Aluno {
     @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Telefone> telefones = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "alunos")
-    private List<Curso> cursos = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "curso_id")
+    private Curso curso;
 
     public Aluno() {
     }
+
 
     public Long getId() {
         return id;
     }
 
-    public String getNome() {
-        return nome;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public String getNomeCompleto() {
+        return nomeCompleto;
+    }
+
+    public void setNomeCompleto(String nomeCompleto) {
+        this.nomeCompleto = nomeCompleto;
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
+
+    public LocalDate getNascimento() {
+        return nascimento;
+    }
+
+    public void setNascimento(LocalDate nascimento) {
+        this.nascimento = nascimento;
     }
 
     public String getEmail() {
@@ -47,29 +75,38 @@ public class Aluno {
         this.email = email;
     }
 
-    public List<Endereco> getEnderecos() {
+    public List<entities.Endereco> getEnderecos() {
         return enderecos;
     }
 
-    public void addEndereco(Endereco endereco) {
-        endereco.setAluno(this);
-        this.enderecos.add(endereco);
+    public void setEnderecos(List<entities.Endereco> enderecos) {
+        this.enderecos = enderecos;
     }
 
-    public List<Telefone> getTelefones() {
+    public List<entities.Telefone> getTelefones() {
         return telefones;
     }
 
-    public void addTelefone(Telefone telefone) {
+    public void setTelefones(List<entities.Telefone> telefones) {
+        this.telefones = telefones;
+    }
+
+    public entities.Curso getCurso() {
+        return curso;
+    }
+
+    public void setCurso(entities.Curso curso) {
+        this.curso = curso;
+    }
+
+
+    public void addEndereco(entities.Endereco endereco) {
+        enderecos.add(endereco);
+        endereco.setAluno(this);
+    }
+
+    public void addTelefone(entities.Telefone telefone) {
+        telefones.add(telefone);
         telefone.setAluno(this);
-        this.telefones.add(telefone);
-    }
-
-    public List<Curso> getCursos() {
-        return cursos;
-    }
-
-    public void addCurso(Curso curso) {
-        this.cursos.add(curso);
     }
 }

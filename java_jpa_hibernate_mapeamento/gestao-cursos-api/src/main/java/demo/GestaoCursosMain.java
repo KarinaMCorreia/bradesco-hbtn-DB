@@ -1,56 +1,57 @@
 package demo;
 
 import entities.*;
-import models.AlunoModel;
 import models.CursoModel;
 
-import java.util.List;
+import java.time.LocalDate;
 
 public class GestaoCursosMain {
 
     public static void main(String[] args) {
 
-        AlunoModel alunoModel = new AlunoModel();
-        CursoModel cursoModel = new CursoModel();
-
-        Aluno aluno = new Aluno();
-        aluno.setNome("João da Silva");
+        entities.Aluno aluno = new entities.Aluno();
+        aluno.setNomeCompleto("João da Silva");
+        aluno.setMatricula("A001");
+        aluno.setNascimento(LocalDate.of(1995, 1, 10));
         aluno.setEmail("joao.silva@example.com");
 
-        Endereco endereco = new Endereco();
-        endereco.setLogradouro("Rua das Flores, 123");
+        entities.Endereco endereco = new entities.Endereco();
+        endereco.setLogradouro("Rua Principal");
+        endereco.setEndereco("Casa");
+        endereco.setNumero("123");
+        endereco.setBairro("Centro");
         endereco.setCidade("São Paulo");
         endereco.setEstado("SP");
+        endereco.setCep("00000-000");
+
         aluno.addEndereco(endereco);
 
-        Telefone telefone = new Telefone();
-        telefone.setNumero("(11) 99999-9999");
-        telefone.setTipo("Celular");
+        entities.Telefone telefone = new entities.Telefone();
+        telefone.setDdd("11");
+        telefone.setNumero("999999999");
+
         aluno.addTelefone(telefone);
 
-        alunoModel.create(aluno);
+        entities.Professor professor = new entities.Professor();
+        professor.setNomeCompleto("Maria Aparecida");
+        professor.setMatricula("P001");
+        professor.setEmail("maria.aparecida@example.com");
 
-        Professor professor = new Professor();
-        professor.setNome("Maria Oliveira");
-        professor.setEmail("maria.oliveira@example.com");
-
-        MaterialCurso materialCurso = new MaterialCurso();
-        materialCurso.setUrlMaterial("https://meusmateriais.com/curso-java-basico");
-
-        Curso curso = new Curso();
-        curso.setNome("Java Básico");
+        entities.Curso curso = new entities.Curso();
+        curso.setNome("Java com Hibernate e JPA");
+        curso.setSigla("JAVA-JPA");
         curso.setProfessor(professor);
-        curso.setMaterialCurso(materialCurso);
+
         curso.addAluno(aluno);
 
+        entities.MaterialCurso materialCurso = new entities.MaterialCurso();
+        materialCurso.setUrl("https://exemplo.com/material-java-jpa");
+        materialCurso.setCurso(curso);
+        curso.setMaterialCurso(materialCurso);
+
+        CursoModel cursoModel = new CursoModel();
         cursoModel.create(curso);
 
-        List<Aluno> alunos = alunoModel.findAll();
-        System.out.println("Qtde de alunos encontrados : " + alunos.size());
-
-        List<Curso> cursos = cursoModel.findAll();
-        System.out.println("Qtde de cursos encontrados : " + cursos.size());
-
-        System.out.println("Fim dos testes de CRUD de gestão de cursos.");
+        System.out.println("Dados inseridos no banco de dados SQLite com sucesso.");
     }
 }
